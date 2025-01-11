@@ -1,0 +1,401 @@
+/* Estilos anteriores permanecem... */
+
+/* Tooltip */
+.tooltip-container {
+  position: relative;
+}
+
+.tooltip {
+  visibility: hidden;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #3e3d32;
+  color: #f8f8f2;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip-container:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Emoji Picker */
+#emojiPicker {
+  position: absolute;
+  bottom: 80px;
+  left: 16px;
+  z-index: 1000;
+}
+
+/* Estilo para preview de imagens */
+.image-preview {
+  max-width: 200px;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+/* Estilo para links de arquivo */
+.file-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #66d9ef;
+  text-decoration: none;
+}
+
+.file-link:hover {
+  color: #fd971f;
+}
+
+/* Estilização do SimpleBar */
+.simplebar-scrollbar::before {
+  background-color: #fd971f;
+}
+
+.simplebar-track.simplebar-vertical {
+  background-color: #3e3d32;
+  border-radius: 4px;
+  width: 8px;
+}
+
+/* Estilização do Lightbox */
+.lb-outerContainer {
+  background-color: #272822 !important;
+  border-radius: 8px !important;
+}
+
+.lb-dataContainer {
+  background-color: #272822 !important;
+  padding: 12px !important;
+  border-radius: 0 0 8px 8px !important;
+}
+
+.lb-data .lb-details {
+  color: #f8f8f2 !important;
+}
+
+.lb-data .lb-caption {
+  font-size: 14px !important;
+  color: #f8f8f2 !important;
+}
+
+.lb-nav a.lb-prev,
+.lb-nav a.lb-next {
+  opacity: 0.8;
+}
+
+.lb-nav a.lb-prev:hover,
+.lb-nav a.lb-next:hover {
+  opacity: 1;
+}
+
+.lb-closeContainer {
+  position: absolute;
+  top: -30px;
+  right: 0;
+}
+
+.lb-close {
+  background: none !important;
+  position: relative;
+  width: 30px !important;
+  height: 30px !important;
+}
+
+.lb-close:before {
+  content: "\f00d";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  color: #f8f8f2;
+  font-size: 24px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Overlay do Lightbox */
+#lightboxOverlay {
+  background-color: rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Animação suave para imagens */
+.message-image-container img {
+  transition: transform 0.2s ease-in-out;
+}
+
+.message-image-container img:hover {
+  transform: scale(1.02);
+}
+
+/* Container da imagem na mensagem */
+.message-image-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Botão de download na imagem */
+.image-actions {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.message-image-container:hover .image-actions {
+  opacity: 1;
+}
+
+.image-action-button {
+  background-color: rgba(39, 40, 34, 0.8);
+  color: #f8f8f2;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.image-action-button:hover {
+  background-color: #fd971f;
+}
+
+/* Ajuste para mensagens coloridas */
+#messages li {
+  animation: fadeIn 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+
+#messages li.own-message {
+  color: rgba(255, 255, 255, 0.9); /* Garantir legibilidade do texto */
+}
+
+/* Ajuste para links e textos em mensagens coloridas */
+.own-message .text-monokai-text {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.own-message .text-monokai-secondary {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.own-message .text-monokai-primary {
+  color: rgba(255, 255, 255, 1) !important;
+  font-weight: bold;
+}
+
+/* Ajuste para links em mensagens coloridas */
+.own-message a {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.own-message a:hover {
+  color: rgba(255, 255, 255, 1) !important;
+  text-decoration: underline;
+}
+
+/* Ajuste para ícones em mensagens coloridas */
+.own-message .fas {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Ajuste para o container de mensagens */
+.messages-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  overflow-y: auto;
+}
+
+#messages {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  flex-grow: 1;
+  min-height: 0;
+}
+
+/* Ajuste para animação de entrada das mensagens */
+#messages li {
+  animation: slideUp 0.3s ease-in-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Ajuste para o botão de carregar mais */
+#loadMoreButton {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background-color: #3e3d32;
+  color: #f8f8f2;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: opacity 0.3s;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+#loadMoreButton:hover {
+  opacity: 0.9;
+}
+
+/* Adicionar ao seu arquivo CSS */
+.plyr {
+  --plyr-color-main: #a6e22e;
+  --plyr-audio-controls-background: transparent;
+  --plyr-audio-control-color: #f8f8f2;
+  --plyr-audio-control-color-hover: #a6e22e;
+  --plyr-range-fill-background: #a6e22e;
+  min-width: 250px;
+}
+
+.plyr--audio .plyr__controls {
+  padding: 8px;
+  border-radius: 6px;
+  background: #272822;
+  color: #f8f8f2;
+}
+
+.plyr--audio .plyr__control {
+  opacity: 0.9;
+}
+
+.plyr--audio .plyr__control:hover {
+  opacity: 1;
+  background-color: rgba(166, 226, 46, 0.1);
+}
+
+.plyr--audio .plyr__control[aria-pressed="true"] {
+  background-color: #a6e22e;
+  color: #272822;
+}
+
+.plyr--full-ui input[type="range"] {
+  color: #a6e22e;
+}
+
+.plyr__progress input[type="range"],
+.plyr__volume input[type="range"] {
+  cursor: pointer;
+}
+
+.plyr__progress__buffer {
+  color: rgba(248, 248, 242, 0.2);
+}
+
+.plyr--full-ui input[type="range"]::-webkit-slider-thumb {
+  background: #a6e22e;
+}
+
+.plyr--full-ui input[type="range"]::-moz-range-thumb {
+  background: #a6e22e;
+}
+
+.plyr--full-ui input[type="range"]::-ms-thumb {
+  background: #a6e22e;
+}
+
+/* Adicionar ao seu arquivo CSS */
+#messages li {
+  position: relative; /* Para posicionamento do botão delete */
+}
+
+/* Estilo para o botão de delete */
+.delete-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  opacity: 0;
+}
+
+#messages li:hover .delete-button {
+  opacity: 1;
+}
+
+.delete-button:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Animação de remoção */
+.message-removing {
+  animation: fadeOut 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+}
+
+/* Adicionar ao seu arquivo CSS */
+#gifResults {
+  scrollbar-width: thin;
+  scrollbar-color: #a6e22e #272822;
+  min-height: 200px;
+}
+
+#gifResults:empty::after {
+  content: "Digite algo para buscar GIFs...";
+  display: block;
+  text-align: center;
+  color: #f8f8f2;
+  opacity: 0.5;
+  padding: 2rem 0;
+}
+
+#gifResults img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+#gifPicker {
+  z-index: 1000;
+  width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+#gifSearch {
+  background-color: #272822;
+}
+
+#gifResults img {
+  transition: all 0.2s ease;
+}
+
+#gifResults img:hover {
+  transform: scale(1.05);
+}

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="dark">
+  <head>
+    <title>Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="css/style.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/emoji-mart@latest/css/emoji-mart.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              monokai: {
+                bg: "#272822",
+                text: "#F8F8F2",
+                primary: "#A6E22E",
+                secondary: "#66D9EF",
+                accent: "#FD971F",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+  </head>
+  <body class="bg-monokai-bg min-h-screen">
+    <!-- Modal de Nickname -->
+    <div
+      id="nicknameModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+    >
+      <div class="bg-[#3E3D32] p-6 rounded-lg w-96">
+        <h2 class="text-monokai-text text-xl mb-4">Configure seu perfil</h2>
+        <form id="nicknameForm" class="flex flex-col gap-4">
+          <input
+            id="nicknameInput"
+            class="bg-monokai-bg text-monokai-text p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-monokai-accent"
+            placeholder="Seu apelido..."
+            required
+          />
+          <div class="flex flex-col gap-2">
+            <label class="text-monokai-text">Escolha sua cor:</label>
+            <div class="grid grid-cols-7 gap-2">
+              <button
+                type="button"
+                data-color="#3F4721"
+                class="w-6 h-4 rounded-full bg-[#3F4721] border-2 border-gray-500 hover:border-white transition-colors"
+              ></button>
+              <button
+                type="button"
+                data-color="#1E3A8A"
+                class="w-6 h-4 rounded-full bg-[#1E3A8A] border-2 border-gray-500 hover:border-white transition-colors"
+              ></button>
+              <button
+                type="button"
+                data-color="#831843"
+                class="w-6 h-4 rounded-full bg-[#831843] border-2 border-gray-500 hover:border-white transition-colors"
+              ></button>
+              <button
+                type="button"
+                data-color="#854D0E"
+                class="w-6 h-4 rounded-full bg-[#854D0E] border-2 border-gray-500 hover:border-white transition-colors"
+              ></button>
+              <button
+                type="button"
+                data-color="#7F1D1D"
+                class="w-6 h-4 rounded-full bg-[#7F1D1D] border-2 border-gray-500 hover:border-white transition-colors"
+              ></button>
+              <button
+                type="button"
+                data-color="#581C87"
+                class="w-6 h-4 rounded-full bg-[#581C87] border-2 border-gray-500 hover:border-white transition-colors"
+              ></button>
+              <button
+                type="button"
+                data-color="#92400E"
+                class="w-6 h-4 rounded-full bg-[#92400E] border-2 border-gray-500 hover:border-white transition-colors"
+              ></button>
+            </div>
+          </div>
+          <button
+            class="bg-monokai-primary text-monokai-bg px-6 py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+          >
+            Entrar no Chat
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="chatContainer" class="container mx-auto p-2 mt-2 max-w-3xl hidden">
+      <div class="messages-wrapper" data-simplebar>
+        <ul id="messages" class="flex flex-col space-y-1 mb-0 h-[80vh]"></ul>
+      </div>
+
+      <div class="mt-6">
+        <!-- Emoji Picker -->
+        <div id="emojiPicker" class="hidden absolute bottom-20 left-4"></div>
+
+        <div
+          id="gifPicker"
+          class="hidden absolute bottom-20 left-16 bg-[#3E3D32] p-4 rounded-lg shadow-lg w-96"
+        >
+          <div class="flex gap-2 mb-4">
+            <input
+              type="text"
+              id="gifSearch"
+              class="flex-1 bg-monokai-bg text-monokai-text p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-monokai-accent"
+              placeholder="Buscar GIFs..."
+            />
+            <button
+              id="gifSearchButton"
+              class="bg-monokai-primary text-monokai-bg px-4 rounded-lg hover:bg-opacity-90 transition-colors"
+            >
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+          <div
+            id="gifResults"
+            class="grid grid-cols-2 gap-2 max-h-96 overflow-y-auto"
+          ></div>
+        </div>
+
+        <form id="form" class="flex gap-2 items-center">
+          <!-- Botão de Emoji -->
+          <button
+            type="button"
+            id="emojiButton"
+            class="text-monokai-accent hover:text-monokai-primary transition-colors p-2 rounded-lg tooltip-container"
+          >
+            <i class="fas fa-smile text-xl"></i>
+            <span class="tooltip">Inserir emoji</span>
+          </button>
+
+          <button
+            type="button"
+            id="gifButton"
+            class="cursor-pointer text-monokai-accent hover:text-monokai-primary transition-colors p-2 rounded-lg tooltip-container"
+          >
+            <i class="fas fa-gift text-xl"></i>
+            <span class="tooltip">Inserir GIF</span>
+          </button>
+
+          <!-- Botão de Anexo -->
+          <label
+            for="fileInput"
+            class="cursor-pointer text-monokai-accent hover:text-monokai-primary transition-colors p-2 rounded-lg tooltip-container"
+          >
+            <i class="fas fa-paperclip text-xl"></i>
+            <span class="tooltip">Anexar arquivo</span>
+            <input
+              type="file"
+              id="fileInput"
+              class="hidden"
+              accept="image/*,.pdf,.doc,.docx"
+            />
+          </label>
+
+          <button
+            type="button"
+            id="screenButton"
+            class="cursor-pointer text-monokai-accent hover:text-monokai-primary transition-colors p-2 rounded-lg tooltip-container"
+          >
+            <i class="fas fa-desktop text-xl"></i>
+            <span class="tooltip">Capturar tela</span>
+          </button>
+
+          <button
+            type="button"
+            id="webcamButton"
+            class="cursor-pointer text-monokai-accent hover:text-monokai-primary transition-colors p-2 rounded-lg tooltip-container"
+          >
+            <i class="fas fa-camera text-xl"></i>
+            <span class="tooltip">Capturar webcam</span>
+          </button>
+
+          <button
+            type="button"
+            id="audioButton"
+            class="cursor-pointer text-monokai-accent hover:text-monokai-primary transition-colors p-2 rounded-lg tooltip-container"
+          >
+            <i class="fas fa-microphone text-xl"></i>
+            <span class="tooltip">Gravar áudio</span>
+          </button>
+
+          <input
+            id="input"
+            class="flex-1 bg-[#3E3D32] text-monokai-text p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-monokai-accent"
+            placeholder="Digite sua mensagem..."
+            autocomplete="off"
+          />
+          <button
+            class="bg-monokai-primary text-monokai-bg px-6 py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+          >
+            Enviar
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="/js/chat.js"></script>
+  </body>
+</html>

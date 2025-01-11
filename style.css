@@ -1,0 +1,45 @@
+/* Estilização da scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #3e3d32;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #75715e;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #fd971f;
+}
+
+/* Animação suave para novas mensagens */
+#messages li {
+  animation: fadeIn 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+}
+
+#messages li.own-message {
+  background-color: #3f4721;
+}
+
+/* Modal de nickname */
+#nicknameModal {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
