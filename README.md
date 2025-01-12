@@ -38,7 +38,7 @@ Um chat em tempo real com suporte a mensagens de texto, emojis, GIFs, imagens, √
 1. Clone o reposit√≥rio:
 
 ```bash
-git clone https://github.com/seu-usuario/chat-realtime.git
+git clone https://github.com/magominimalista/realtimechat
 cd chat-realtime
 ```
 
