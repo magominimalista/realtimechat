@@ -55,29 +55,39 @@ app.get("/", (req, res) => {
 app.get("/messages", (req, res) => {
   const page = parseInt(req.query.page) || 0;
   const limit = 10;
-  const offset = page * limit;
 
-  db.all(
-    `SELECT id, nickname, message as text, timestamp, color, fileUrl, fileName 
-     FROM messages ORDER BY id DESC LIMIT ? OFFSET ?`,
-    [limit, offset],
-    (err, rows) => {
-      if (err) {
-        res.status(500).json({ error: err.message });
-        return;
-      }
-      db.get("SELECT COUNT(*) as total FROM messages", (err, count) => {
+  db.get("SELECT COUNT(*) as total FROM messages", (err, count) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+
+    // Calcular offset simples para paginação decrescente
+    const offset = page * limit;
+
+    db.all(
+      `SELECT id, nickname, message as text, timestamp, color, fileUrl, fileName 
+       FROM messages 
+       ORDER BY id DESC 
+       LIMIT ? 
+       OFFSET ?`,
+      [limit, offset],
+      (err, rows) => {
         if (err) {
           res.status(500).json({ error: err.message });
           return;
         }
+
+        // Inverter a ordem das mensagens antes de enviar
+        const reversedRows = [...rows].reverse();
+
         res.json({
-          messages: rows,
+          messages: reversedRows,
           hasMore: offset + limit < count.total,
         });
-      });
-    }
-  );
+      }
+    );
+  });
 });
 
 // Adicionar nova rota para deletar mensagem
@@ -178,16 +188,19 @@ io.on("connection", (socket) => {
   });
 
   socket.on("chat message", (msgData) => {
+    // Log para debug
+    console.log("Recebendo mensagem:", msgData);
+
     db.run(
       `INSERT INTO messages (nickname, message, timestamp, color, fileUrl, fileName) 
        VALUES (?, ?, ?, ?, ?, ?)`,
       [
         msgData.nickname,
-        msgData.text,
+        msgData.text, // Aqui está usando text, mas no banco é message
         msgData.timestamp,
         msgData.color,
-        msgData.fileUrl,
-        msgData.fileName,
+        msgData.fileUrl || null,
+        msgData.fileName || null,
       ],
       function (err) {
         if (err) {

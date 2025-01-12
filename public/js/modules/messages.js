@@ -6,6 +6,9 @@ let currentPage = 0;
 let loadingMessages = false;
 
 export function createMessageElement(msgData, prepend = false) {
+  // Log para debug
+  console.log("Criando elemento de mensagem:", msgData);
+
   const item = document.createElement("li");
   item.className = `p-3 mr-4 rounded-lg ${
     msgData.nickname === state.nickname ? "own-message" : "bg-[#3E3D32]"
@@ -68,12 +71,17 @@ export function createMessageElement(msgData, prepend = false) {
   header.appendChild(timestamp);
   item.appendChild(header);
 
+  // Verificar tanto text quanto message
+  const messageText = msgData.text || msgData.message;
+
   if (msgData.fileUrl) {
     const fileLink = createFileLink(msgData);
     item.appendChild(fileLink);
-  } else {
+  }
+
+  if (messageText) {
     const text = document.createElement("p");
-    text.textContent = msgData.text;
+    text.textContent = messageText;
     text.className = "text-monokai-text break-words";
     item.appendChild(text);
   }
@@ -117,43 +125,42 @@ export async function loadMessages(page = 0) {
     // Limpar mensagens se for a primeira página
     if (page === 0) {
       elements.messages.innerHTML = "";
+      // Processar mensagens normalmente para a primeira página
+      data.messages.forEach((msg) => {
+        if (msg.fileName?.endsWith(".mp3")) {
+          msg.isAudio = true;
+        } else if (msg.fileName === "giphy.gif") {
+          msg.isGif = true;
+        } else if (msg.fileUrl && /\.(jpg|jpeg|png|gif)$/i.test(msg.fileUrl)) {
+          msg.isImage = true;
+        }
+        createMessageElement(msg, false);
+      });
+    } else {
+      // Inverter a ordem das mensagens antigas e adicionar no topo
+      [...data.messages].reverse().forEach((msg) => {
+        if (msg.fileName?.endsWith(".mp3")) {
+          msg.isAudio = true;
+        } else if (msg.fileName === "giphy.gif") {
+          msg.isGif = true;
+        } else if (msg.fileUrl && /\.(jpg|jpeg|png|gif)$/i.test(msg.fileUrl)) {
+          msg.isImage = true;
+        }
+        createMessageElement(msg, true);
+      });
     }
 
-    // Se estiver carregando mais mensagens antigas (page > 0),
-    // inverter a ordem para manter a cronologia correta
-    const messagesToProcess =
-      page > 0 ? [...data.messages].reverse() : data.messages;
-
-    // Processar mensagens
-    messagesToProcess.forEach((msg) => {
-      if (msg.fileName?.endsWith(".mp3")) {
-        msg.isAudio = true;
-      } else if (msg.fileName === "giphy.gif") {
-        msg.isGif = true;
-      } else if (msg.fileUrl && /\.(jpg|jpeg|png|gif)$/i.test(msg.fileUrl)) {
-        msg.isImage = true;
-      }
-      createMessageElement(msg, page > 0);
-    });
-
-    // Mostrar/ocultar botões de carregar mais
+    // Mostrar/ocultar botão de carregar mais
     const loadOlderButton = document.getElementById("loadOlderButton");
     if (loadOlderButton) {
       loadOlderButton.style.display = data.hasMore ? "flex" : "none";
     }
 
-    if (elements.loadMoreButton) {
-      elements.loadMoreButton.style.display = data.hasMore ? "block" : "none";
-    }
-
     currentPage = page;
 
-    // Scroll para a posição correta após carregar mensagens antigas
-    if (page > 0 && data.messages.length > 0) {
-      const firstNewMessage = elements.messages.firstChild;
-      if (firstNewMessage) {
-        firstNewMessage.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+    // Se for a primeira página, rolar para o final
+    if (page === 0) {
+      elements.messages.scrollTop = elements.messages.scrollHeight;
     }
   } catch (error) {
     console.error("Erro ao carregar mensagens:", error);
